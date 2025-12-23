@@ -3,429 +3,269 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Wait for DOM to be ready
 document.addEventListener('DOMContentLoaded', () => {
 
 // ═══════════════════════════════════════════════════════════
-// CURSOR EFFECTS
+// HERO TITLE ENTRANCE - Smooth fade in
 // ═══════════════════════════════════════════════════════════
 
-const cursorTrail = document.querySelector('.cursor-trail');
-let mouseX = 0, mouseY = 0;
-let trailX = 0, trailY = 0;
+const heroTitleLines = document.querySelectorAll('.hero-title .title-line');
+if (heroTitleLines.length > 0) {
+    heroTitleLines.forEach((line, i) => {
+        gsap.fromTo(line, 
+            {
+                opacity: 0,
+                x: -60,
+            },
+            {
+                opacity: 1,
+                x: 0,
+                duration: 1.2,
+                delay: i * 0.25,
+                ease: 'power3.out'
+            }
+        );
+    });
+}
 
-document.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
+// Fade in hero meta
+const heroMeta = document.querySelector('.hero-meta');
+if (heroMeta) {
+    gsap.fromTo(heroMeta,
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 1, delay: 0.8, ease: 'power2.out' }
+    );
+}
+
+// ═══════════════════════════════════════════════════════════
+// SCROLL ANIMATIONS
+// ═══════════════════════════════════════════════════════════
+
+document.querySelectorAll('[data-parallax]').forEach(el => {
+    const speed = el.getAttribute('data-parallax');
+    gsap.to(el, {
+        y: speed,
+        ease: 'none',
+        scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: true }
+    });
 });
 
-// Smooth cursor trail with easing
-function animateCursor() {
-    const ease = 0.15;
-    trailX += (mouseX - trailX) * ease;
-    trailY += (mouseY - trailY) * ease;
-    
-    if (cursorTrail) {
-        cursorTrail.style.left = trailX + 'px';
-        cursorTrail.style.top = trailY + 'px';
-    }
-    
-    requestAnimationFrame(animateCursor);
-}
-animateCursor();
+document.querySelectorAll('[data-scroll-reveal]').forEach(el => {
+    gsap.from(el.children, {
+        y: 100, opacity: 0, stagger: 0.2, duration: 1, ease: 'power3.out',
+        scrollTrigger: { trigger: el, start: 'top 80%' }
+    });
+});
 
-// Cursor interaction with elements
-const interactiveElements = document.querySelectorAll('a, button, .album, .project, .rotation-album');
-interactiveElements.forEach(el => {
+document.querySelectorAll('[data-hover-distort]').forEach(el => {
     el.addEventListener('mouseenter', () => {
-        gsap.to(cursorTrail, { 
-            scale: 2, 
-            borderColor: '#ffffff',
-            duration: 0.3,
-            ease: 'back.out'
+        gsap.to(el, { scaleX: 1.05, scaleY: 0.95, duration: 0.3, ease: 'power2.out' });
+    });
+    el.addEventListener('mouseleave', () => {
+        gsap.to(el, { scaleX: 1, scaleY: 1, duration: 0.6, ease: 'elastic.out(1, 0.3)' });
+    });
+});
+
+document.querySelectorAll('[data-split-chars]').forEach(el => {
+    const text = el.textContent;
+    el.innerHTML = text.split('').map(char => 
+        `<span style="display:inline-block; opacity:0;">${char === ' ' ? '&nbsp;' : char}</span>`
+    ).join('');
+    gsap.to(el.querySelectorAll('span'), {
+        opacity: 1, y: 0, stagger: 0.02, duration: 0.8, ease: 'power2.out',
+        scrollTrigger: { trigger: el, start: 'top 80%' }
+    });
+});
+
+document.querySelectorAll('.contact-link').forEach(link => {
+    link.addEventListener('mousemove', (e) => {
+        const rect = link.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        gsap.to(link, { x: x * 0.3, y: y * 0.3, duration: 0.3, ease: 'power2.out' });
+    });
+    link.addEventListener('mouseleave', () => {
+        gsap.to(link, { x: 0, y: 0, duration: 0.5, ease: 'elastic.out(1, 0.3)' });
+    });
+});
+
+document.querySelectorAll('.shape').forEach((shape, i) => {
+    document.addEventListener('mousemove', (e) => {
+        const x = (e.clientX / window.innerWidth - 0.5) * 50;
+        const y = (e.clientY / window.innerHeight - 0.5) * 50;
+        gsap.to(shape, { x: x * (i + 1), y: y * (i + 1), duration: 1.5, ease: 'power2.out' });
+    });
+});
+
+// ═══════════════════════════════════════════════════════════
+// INTERACTIVE TEXT EFFECTS
+// ═══════════════════════════════════════════════════════════
+
+// Split text into individual letters for animation
+function splitText(selector) {
+    document.querySelectorAll(selector).forEach(el => {
+        const text = el.textContent;
+        el.innerHTML = text.split('').map((char, i) => 
+            `<span class="char" style="display: inline-block; transition-delay: ${i * 0.02}s;">${char === ' ' ? '&nbsp;' : char}</span>`
+        ).join('');
+    });
+}
+
+splitText('.work-title, .hero-title .title-line');
+
+// Wave effect on hover (constrained)
+document.querySelectorAll('.work-title').forEach(title => {
+    const chars = title.querySelectorAll('.char');
+    
+    title.addEventListener('mouseenter', () => {
+        chars.forEach((char, i) => {
+            gsap.to(char, {
+                y: -15,
+                duration: 0.5,
+                delay: i * 0.03,
+                ease: 'power2.out',
+                yoyo: true,
+                repeat: 1
+            });
         });
     });
+});
+
+// Text scramble effect
+function scrambleText(element, finalText) {
+    const chars = '!@#$%^&*()_+-=[]{}|;:,.<>?';
+    let iterations = 0;
+    const interval = setInterval(() => {
+        element.textContent = finalText.split('').map((char, i) => {
+            if (i < iterations) return finalText[i];
+            return chars[Math.floor(Math.random() * chars.length)];
+        }).join('');
+        
+        if (iterations >= finalText.length) clearInterval(interval);
+        iterations += 1/3;
+    }, 30);
+}
+
+// Apply scramble to section headers on scroll
+document.querySelectorAll('.section-header h2').forEach(header => {
+    const originalText = header.textContent;
+    let hasAnimated = false;
     
-    el.addEventListener('mouseleave', () => {
-        gsap.to(cursorTrail, { 
-            scale: 1, 
-            borderColor: '#ffffff',
+    ScrollTrigger.create({
+        trigger: header,
+        start: 'top 80%',
+        onEnter: () => {
+            if (!hasAnimated) {
+                scrambleText(header, originalText);
+                hasAnimated = true;
+            }
+        }
+    });
+});
+
+// Magnetic text - follows mouse (constrained)
+document.querySelectorAll('.work-description').forEach(desc => {
+    desc.addEventListener('mousemove', (e) => {
+        const rect = desc.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        
+        gsap.to(desc, {
+            x: x * 10,
+            y: y * 10,
             duration: 0.3,
             ease: 'power2.out'
         });
     });
-});
-
-// ═══════════════════════════════════════════════════════════
-// TEXT SCRAMBLE EFFECT
-// ═══════════════════════════════════════════════════════════
-
-class TextScramble {
-    constructor(el) {
-        this.el = el;
-        this.chars = '!<>-_\\/[]{}—=+*^?#________';
-        this.update = this.update.bind(this);
-    }
     
-    setText(newText) {
-        const oldText = this.el.innerText;
-        const length = Math.max(oldText.length, newText.length);
-        const promise = new Promise((resolve) => this.resolve = resolve);
-        this.queue = [];
-        
-        for (let i = 0; i < length; i++) {
-            const from = oldText[i] || '';
-            const to = newText[i] || '';
-            const start = Math.floor(Math.random() * 40);
-            const end = start + Math.floor(Math.random() * 40);
-            this.queue.push({ from, to, start, end });
-        }
-        
-        cancelAnimationFrame(this.frameRequest);
-        this.frame = 0;
-        this.update();
-        return promise;
-    }
-    
-    update() {
-        let output = '';
-        let complete = 0;
-        
-        for (let i = 0, n = this.queue.length; i < n; i++) {
-            let { from, to, start, end, char } = this.queue[i];
-            
-            if (this.frame >= end) {
-                complete++;
-                output += to;
-            } else if (this.frame >= start) {
-                if (!char || Math.random() < 0.28) {
-                    char = this.randomChar();
-                    this.queue[i].char = char;
-                }
-                output += char;
-            } else {
-                output += from;
-            }
-        }
-        
-        this.el.innerText = output;
-        
-        if (complete === this.queue.length) {
-            this.resolve();
-        } else {
-            this.frameRequest = requestAnimationFrame(this.update);
-            this.frame++;
-        }
-    }
-    
-    randomChar() {
-        return this.chars[Math.floor(Math.random() * this.chars.length)];
-    }
-}
-
-// Apply text scramble to section headers
-const sectionHeaders = document.querySelectorAll('.section-header-glitch');
-sectionHeaders.forEach(header => {
-    const scramble = new TextScramble(header);
-    const originalText = header.textContent;
-    
-    header.addEventListener('mouseenter', () => {
-        scramble.setText(originalText);
+    desc.addEventListener('mouseleave', () => {
+        gsap.to(desc, { x: 0, y: 0, duration: 0.5, ease: 'elastic.out(1, 0.5)' });
     });
 });
 
-// ═══════════════════════════════════════════════════════════
-// RANDOM GLITCH EFFECTS
-// ═══════════════════════════════════════════════════════════
-
-function randomGlitch() {
-    const glitchElements = document.querySelectorAll('.glitch-text, .section-header-glitch');
-    
+// Glitch effect on meta items
+document.querySelectorAll('.meta-item').forEach((item, i) => {
     setInterval(() => {
-        if (Math.random() < 0.1) { // 10% chance every interval
-            const randomEl = glitchElements[Math.floor(Math.random() * glitchElements.length)];
-            randomEl.classList.add('glitching');
-            
-            setTimeout(() => {
-                randomEl.classList.remove('glitching');
-            }, 300);
+        if (Math.random() < 0.05) {
+            gsap.to(item, {
+                x: Math.random() * 4 - 2,
+                duration: 0.05,
+                yoyo: true,
+                repeat: 3,
+                ease: 'power1.inOut'
+            });
         }
-    }, 3000);
-}
-
-randomGlitch();
-
-// ═══════════════════════════════════════════════════════════
-// PARALLAX EFFECTS
-// ═══════════════════════════════════════════════════════════
-
-// Geometric shapes parallax
-gsap.utils.toArray('.geo-shape').forEach((shape, i) => {
-    const speed = (i + 1) * 0.5;
-    
-    gsap.to(shape, {
-        y: () => window.innerHeight * speed,
-        ease: 'none',
-        scrollTrigger: {
-            trigger: 'body',
-            start: 'top top',
-            end: 'bottom bottom',
-            scrub: 1
-        }
-    });
+    }, 3000 + i * 500);
 });
 
-// Stars parallax
-gsap.utils.toArray('.star').forEach((star, i) => {
-    const speed = 0.3 + (i * 0.1);
-    
-    gsap.to(star, {
-        y: () => -window.innerHeight * speed,
-        ease: 'none',
-        scrollTrigger: {
-            trigger: 'body',
-            start: 'top top',
-            end: 'bottom bottom',
-            scrub: 2
-        }
-    });
-});
-
-// ═══════════════════════════════════════════════════════════
-// SCROLL-TRIGGERED ANIMATIONS
-// ═══════════════════════════════════════════════════════════
-
-// Fade in projects on scroll
-gsap.utils.toArray('.project').forEach((project, i) => {
-    gsap.from(project, {
+// Stagger fade in for list items
+document.querySelectorAll('.now-block ul').forEach(list => {
+    gsap.from(list.querySelectorAll('li'), {
         opacity: 0,
-        x: -50,
+        x: -30,
+        stagger: 0.1,
         duration: 0.8,
         ease: 'power3.out',
         scrollTrigger: {
-            trigger: project,
-            start: 'top 85%',
-            toggleActions: 'play none none reverse'
+            trigger: list,
+            start: 'top 85%'
         }
     });
 });
 
-// Albums stagger animation
-gsap.utils.toArray('.album').forEach((album, i) => {
-    const direction = i % 2 === 0 ? 100 : -100;
-    
-    gsap.from(album, {
-        opacity: 0,
-        x: direction,
-        rotation: 5,
-        duration: 1,
-        ease: 'power3.out',
-        scrollTrigger: {
-            trigger: album,
-            start: 'top 80%',
-            toggleActions: 'play none none reverse'
-        }
-    });
-});
-
-// Rotation grid cards
-gsap.utils.toArray('.rotation-album').forEach((card, i) => {
-    gsap.from(card, {
-        opacity: 0,
-        y: 50,
-        scale: 0.8,
-        duration: 0.6,
-        delay: i * 0.1,
-        ease: 'back.out(1.7)',
-        scrollTrigger: {
-            trigger: card,
-            start: 'top 85%',
-            toggleActions: 'play none none reverse'
-        }
-    });
-});
-
-// ═══════════════════════════════════════════════════════════
-// MAGNETIC ELEMENTS
-// ═══════════════════════════════════════════════════════════
-
-function createMagneticEffect(elements) {
-    elements.forEach(el => {
-        const strength = 0.3;
-        
-        el.addEventListener('mousemove', (e) => {
-            const rect = el.getBoundingClientRect();
-            const x = e.clientX - rect.left - rect.width / 2;
-            const y = e.clientY - rect.top - rect.height / 2;
-            
-            gsap.to(el, {
-                x: x * strength,
-                y: y * strength,
-                duration: 0.3,
-                ease: 'power2.out'
-            });
-        });
-        
-        el.addEventListener('mouseleave', () => {
-            gsap.to(el, {
-                x: 0,
-                y: 0,
-                duration: 0.5,
-                ease: 'elastic.out(1, 0.5)'
-            });
-        });
-    });
-}
-
-createMagneticEffect(document.querySelectorAll('.social-links a, .project-links a'));
-
-// ═══════════════════════════════════════════════════════════
-// PROFILE PIC TILT EFFECT
-// ═══════════════════════════════════════════════════════════
-
-const profilePic = document.querySelector('.profile-pic');
-if (profilePic) {
-    profilePic.addEventListener('mousemove', (e) => {
-        const rect = profilePic.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-        const rotateX = (y - centerY) / 5;
-        const rotateY = (centerX - x) / 5;
-        
-        gsap.to(profilePic, {
-            rotationX: rotateX,
-            rotationY: rotateY,
-            transformPerspective: 1000,
+// Rotate and scale on hover for work tags
+document.querySelectorAll('.work-tags span').forEach(tag => {
+    tag.addEventListener('mouseenter', () => {
+        gsap.to(tag, {
+            scale: 1.2,
+            rotation: Math.random() * 10 - 5,
             duration: 0.3,
-            ease: 'power2.out'
+            ease: 'back.out(2)'
         });
     });
     
-    profilePic.addEventListener('mouseleave', () => {
-        gsap.to(profilePic, {
-            rotationX: 0,
-            rotationY: 0,
-            duration: 0.5,
+    tag.addEventListener('mouseleave', () => {
+        gsap.to(tag, {
+            scale: 1,
+            rotation: 0,
+            duration: 0.4,
             ease: 'elastic.out(1, 0.5)'
         });
     });
-}
-
-// ═══════════════════════════════════════════════════════════
-// ENHANCED TAB NAVIGATION WITH GSAP
-// ═══════════════════════════════════════════════════════════
-
-const navLinks = document.querySelectorAll('nav a');
-const sections = document.querySelectorAll('main section');
-
-if (sections.length > 0) {
-    // Show about section by default
-    gsap.set('#about', { opacity: 1, visibility: 'visible' });
-    
-    navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const targetSection = this.getAttribute('data-section');
-            
-            // Hide all sections with GSAP
-            sections.forEach(s => {
-                gsap.to(s, {
-                    opacity: 0,
-                    y: 20,
-                    duration: 0.3,
-                    ease: 'power2.in',
-                    onComplete: () => {
-                        s.classList.remove('active');
-                    }
-                });
-            });
-            
-            // Show target section with GSAP
-            setTimeout(() => {
-                const target = document.getElementById(targetSection);
-                target.classList.add('active');
-                
-                gsap.fromTo(target, 
-                    { opacity: 0, y: 30 },
-                    { 
-                        opacity: 1, 
-                        y: 0, 
-                        duration: 0.6,
-                        ease: 'power3.out'
-                    }
-                );
-            }, 300);
-            
-            // Update nav links
-            navLinks.forEach(l => l.classList.remove('active'));
-            this.classList.add('active');
-        });
-    });
-}
-
-// ═══════════════════════════════════════════════════════════
-// EASTER EGG: KONAMI CODE
-// ═══════════════════════════════════════════════════════════
-
-const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
-let konamiIndex = 0;
-
-document.addEventListener('keydown', (e) => {
-    if (e.key === konamiCode[konamiIndex]) {
-        konamiIndex++;
-        
-        if (konamiIndex === konamiCode.length) {
-            triggerEasterEgg();
-            konamiIndex = 0;
-        }
-    } else {
-        konamiIndex = 0;
-    }
 });
 
-function triggerEasterEgg() {
-    // Ultra glitch mode
-    document.body.style.animation = 'glitch-skew 0.1s infinite';
-    
-    const allText = document.querySelectorAll('h1, h2, h3, p, a');
-    allText.forEach(el => {
-        el.classList.add('glitching');
+// Breathing animation for title overlay
+const titleOverlay = document.querySelector('.title-overlay');
+if (titleOverlay) {
+    gsap.to(titleOverlay, {
+        opacity: 0.5,
+        scale: 1.05,
+        duration: 2,
+        yoyo: true,
+        repeat: -1,
+        ease: 'sine.inOut'
     });
-    
-    // Create particle explosion
-    for (let i = 0; i < 50; i++) {
-        const particle = document.createElement('div');
-        particle.textContent = '✦';
-        particle.style.position = 'fixed';
-        particle.style.left = '50%';
-        particle.style.top = '50%';
-        particle.style.fontSize = Math.random() * 30 + 10 + 'px';
-        particle.style.pointerEvents = 'none';
-        particle.style.zIndex = '9999';
-        document.body.appendChild(particle);
-        
-        gsap.to(particle, {
-            x: (Math.random() - 0.5) * 2000,
-            y: (Math.random() - 0.5) * 2000,
-            opacity: 0,
-            rotation: Math.random() * 720,
-            duration: 2,
-            ease: 'power2.out',
-            onComplete: () => particle.remove()
-        });
-    }
-    
-    setTimeout(() => {
-        document.body.style.animation = '';
-        allText.forEach(el => {
-            el.classList.remove('glitching');
-        });
-    }, 2000);
 }
 
-console.log('%c✦ EXPERIMENTAL MODE ACTIVE ✦', 'font-size: 20px; color: #666;');
-console.log('%cTry the Konami code: ↑ ↑ ↓ ↓ ← → ← → B A', 'font-size: 12px; color: #666;');
+// Character reveal on scroll for about section
+document.querySelectorAll('.about-description p').forEach(p => {
+    const text = p.textContent;
+    p.innerHTML = text.split('').map((char, i) => 
+        `<span style="opacity: 0; display: inline-block;">${char === ' ' ? '&nbsp;' : char}</span>`
+    ).join('');
+    
+    gsap.to(p.querySelectorAll('span'), {
+        opacity: 1,
+        stagger: 0.01,
+        duration: 0.05,
+        ease: 'none',
+        scrollTrigger: {
+            trigger: p,
+            start: 'top 80%'
+        }
+    });
+});
 
-}); // End DOMContentLoaded
+console.log('%c✦ EXPERIMENTAL MODE ACTIVE ✦', 'font-size: 20px; color: #000;');
+
+});
