@@ -1,0 +1,20 @@
+{
+  "name": "neocities-site",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "bun build src/main.js --outdir ./dist --minify",
+    "dev": "bun build src/main.js --outdir ./dist --watch",
+    "serve": "bun run server.js"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "gsap": "^3.14.2"
+  }
+}
