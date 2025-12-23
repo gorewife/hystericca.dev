@@ -1,41 +1,5 @@
-# hystericca - experimental personal site
-
-Avant-garde monochromatic personal website with experimental JavaScript effects.
-
-## Setup
-
-```bash
-bun install
-```
-
-## Development
-
-Build JavaScript (with watch mode):
-```bash
-bun run dev
-```
-
-Build for production:
-```bash
-bun run build
-```
-
-## Features
-
-### Visual Effects
-- **Glitch animations** - RGB chromatic aberration on headers and text
-- **Floating geometric shapes** - Parallax animated shapes with blend modes
-- **Custom cursor trail** - Smooth following cursor with magnetic interactions
-- **Text scramble** - Hover effects that scramble and reveal text
-- **Experimental typography** - Variable spacing and transformations
-
-### JavaScript Interactions (GSAP)
-- **Parallax scrolling** - Multi-layer depth scrolling effects
-- **Scroll-triggered animations** - Elements animate in as you scroll
-- **Magnetic elements** - Social links and buttons follow cursor
-- **3D tilt effects** - Profile picture has realistic tilt on hover
-- **Random glitches** - Spontaneous glitch effects
-- **Enhanced transitions** - Smooth GSAP-powered section switching
+# hystericca
+experimenting with stuff idk i like graphic design
 
 ### Easter Egg
 Try the Konami code: `↑ ↑ ↓ ↓ ← → ← → B A`
@@ -66,4 +30,3 @@ Try the Konami code: `↑ ↑ ↓ ↓ ← → ← → B A`
 
 ---
 
-made with ☕ in seattle
