@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grimkeeper - hystericca</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Geometric shapes -->
+    <div class="geo-shape geo-1"></div>
+    <div class="geo-shape geo-3"></div>
+    
+    <div class="container">
+        <nav class="breadcrumb">
+            <a href="index.html">←</a>
+        </nav>
+
+        <header class="project-header">
+            <h1 class="glitch-text" data-text="Grimkeeper">Grimkeeper</h1>
+            <p class="subtitle experimental-spacing">discord bot for blood on the clocktower</p>
+            <div class="project-links">
+                <a href="https://github.com/gorewife/dweks" target="_blank">GitHub</a>
+                <a href="#" target="_blank">add to discord</a>
+            </div>
+        </header>
+
+        <main class="project-content">
+            <section>
+                <h2 class="section-header-glitch" data-text="overview">overview</h2>
+                <p>grimkeeper handles voice channel automation, spectator following, timers, and grimoire tracking for blood on the clocktower discord communities.</p>
+            </section>
+
+            <section>
+                <h2 class="section-header-glitch" data-text="features">features</h2>
+                <ul>
+                    <li>automatic nickname prefixes for storytellers and spectators</li>
+                    <li>voice channel cap management</li>
+                    <li>shadow follow system for spectators</li>
+                    <li>timer system with persistence</li>
+                    <li>script polling for player voting</li>
+                    <li>player tracking and grimoire management</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2 class="section-header-glitch" data-text="commands">commands</h2>
+                <div class="command-group">
+                    <h3>storyteller</h3>
+                    <code>*st</code> — claim storyteller role<br>
+                    <code>*call</code> — move everyone to town square<br>
+                    <code>*timer 5m</code> — schedule delayed call<br>
+                    <code>*poll 123</code> — create script voting poll<br>
+                    <code>*night / *day</code> — announce phase
+                </div>
+
+                <div class="command-group">
+                    <h3>spectator</h3>
+                    <code>*spec @user</code> — shadow follow a player<br>
+                    <code>*unspec</code> — stop following<br>
+                    <code>*dnd</code> — prevent being followed
+                </div>
+
+                <div class="command-group">
+                    <h3>everyone</h3>
+                    <code>*!</code> — toggle spectator mode<br>
+                    <code>*players</code> — list active players<br>
+                    <code>*help</code> — show all commands
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-header-glitch" data-text="tech stack">tech stack</h2>
+                <div class="tags">
+                    <span>Python 3.8+</span>
+                    <span>discord.py</span>
+                    <span>asyncio</span>
+                    <span>JSON persistence</span>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-header-glitch" data-text="status">status</h2>
+                <p>v1.7.0 — active development</p>
+                <p>MIT License — open source</p>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="index.html">← back</a></p>
+        </footer>
+    </div>
+</body>
+</html>
