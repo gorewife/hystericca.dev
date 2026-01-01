@@ -197,9 +197,7 @@ main {
     line-height: 0.9;
     letter-spacing: -0.03em;
     text-transform: uppercase;
-    margin-bottom: 8rem;
-    border-bottom: 4px solid var(--black);
-    padding-bottom: 2rem;
+    margin-bottom: 6rem;
 }
 
 .work-grid {
@@ -297,7 +295,29 @@ main {
 }
 
 .section-now {
-    background: var(--off-white);
+    background: var(--black);
+    color: var(--off-white);
+    position: relative;
+    overflow: hidden;
+}
+
+.section-now::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -50%;
+    width: 200%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(220, 20, 60, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(0, 82, 255, 0.08) 0%, transparent 50%);
+    animation: gradientShift 20s ease infinite;
+    pointer-events: none;
+}
+
+@keyframes gradientShift {
+    0%, 100% { transform: translateX(0) scale(1); }
+    50% { transform: translateX(10%) scale(1.1); }
 }
 
 .now-header {
@@ -305,35 +325,97 @@ main {
     justify-content: space-between;
     align-items: baseline;
     margin-bottom: 6rem;
-    border-bottom: 2px solid var(--black);
-    padding-bottom: 1rem;
+    border-bottom: 3px solid var(--off-white);
+    padding-bottom: 1.5rem;
 }
 
 .now-header h2 {
     font-size: clamp(4rem, 10vw, 8rem);
     font-weight: 900;
     letter-spacing: -0.03em;
+    color: var(--off-white);
 }
 
 .now-date {
-    font-size: 1rem;
-    font-weight: 700;
-    letter-spacing: 0.15em;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
     color: var(--gray);
+    opacity: 0.6;
 }
 
 .now-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 4rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2.5rem;
+    max-width: 100%;
+}
+
+.now-block {
+    background: rgba(255, 255, 255, 0.02);
+    padding: 2.5rem 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.now-block::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.now-block:hover::after {
+    opacity: 1;
+    transform: scale(1);
+    animation: ripple 1.5s ease-out;
+}
+
+@keyframes ripple {
+    0% { transform: scale(0); opacity: 1; }
+    100% { transform: scale(1.5); opacity: 0; }
+}
+
+.now-block::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--off-white), transparent);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.now-block:hover {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.25);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.now-block:hover::before {
+    opacity: 1;
 }
 
 .now-block h3 {
-    font-size: 1.5rem;
-    font-weight: 900;
-    letter-spacing: 0.1em;
-    margin-bottom: 2rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    margin-bottom: 1.8rem;
     text-transform: uppercase;
+    color: var(--off-white);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    padding-bottom: 0.6rem;
 }
 
 .now-block ul {
@@ -341,19 +423,18 @@ main {
 }
 
 .now-block li {
-    font-size: 1.1rem;
-    line-height: 2;
-    color: var(--dark-gray);
-    padding-left: 1.5rem;
+    font-size: 0.95rem;
+    line-height: 1.9;
+    color: var(--faded);
+    padding-left: 0;
     position: relative;
+    transition: all 0.3s ease;
+    font-weight: 300;
+    letter-spacing: 0.01em;
 }
 
-.now-block li::before {
-    content: '■';
-    position: absolute;
-    left: 0;
-    font-size: 0.5rem;
-    color: var(--black);
+.now-block li:hover {
+    color: var(--off-white);
 }
 
 /* ═══════════════════════════════════════════════════

@@ -292,6 +292,99 @@ contactLinks.forEach(link => {
     });
 });
 
+// NOW section animations
+const nowBlocks = document.querySelectorAll('.now-block');
+nowBlocks.forEach((block, index) => {
+    // Staggered entrance
+    gsap.from(block, {
+        opacity: 0,
+        y: 80,
+        rotation: -2,
+        duration: 1,
+        ease: 'power3.out',
+        scrollTrigger: {
+            trigger: block,
+            start: 'top 85%',
+            toggleActions: 'play none none reverse'
+        },
+        delay: index * 0.15
+    });
+
+    // Glitch effect on hover
+    const heading = block.querySelector('h3');
+    if (heading) {
+        const originalText = heading.textContent;
+        const glitchChars = '▓▒░█▄▀■□▪▫';
+        
+        block.addEventListener('mouseenter', () => {
+            let iterations = 0;
+            const interval = setInterval(() => {
+                heading.textContent = originalText
+                    .split('')
+                    .map((char, i) => {
+                        if (i < iterations) return originalText[i];
+                        return glitchChars[Math.floor(Math.random() * glitchChars.length)];
+                    })
+                    .join('');
+                
+                if (iterations >= originalText.length) {
+                    clearInterval(interval);
+                    heading.textContent = originalText;
+                }
+                iterations += 1/2;
+            }, 30);
+        });
+    }
+
+    // Animate list items on scroll
+    const listItems = block.querySelectorAll('li');
+    listItems.forEach((item, i) => {
+        gsap.from(item, {
+            opacity: 0,
+            x: -20,
+            duration: 0.6,
+            ease: 'power2.out',
+            scrollTrigger: {
+                trigger: item,
+                start: 'top 90%',
+                toggleActions: 'play none none reverse'
+            },
+            delay: (index * 0.15) + (i * 0.1)
+        });
+    });
+});
+
+// Parallax effect for NOW section number
+const nowSection = document.querySelector('.section-now');
+if (nowSection) {
+    const nowNumber = nowSection.querySelector('.section-number-large');
+    if (nowNumber) {
+        gsap.to(nowNumber, {
+            y: 100,
+            opacity: 0.05,
+            ease: 'none',
+            scrollTrigger: {
+                trigger: nowSection,
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: 1.5
+            }
+        });
+    }
+}
+
+// Floating animation for NOW date
+const nowDate = document.querySelector('.now-date');
+if (nowDate) {
+    gsap.to(nowDate, {
+        y: -5,
+        duration: 2,
+        ease: 'sine.inOut',
+        repeat: -1,
+        yoyo: true
+    });
+}
+
 console.log('%c▓ HYSTERICCA', 'font-size: 24px; font-weight: 900; color: #dc143c;');
 console.log('%cMidnight/Crimson · 2025', 'font-size: 12px; color: #999;');
 
