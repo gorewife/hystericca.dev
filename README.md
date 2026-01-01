@@ -1,8 +1,5 @@
-# hystericca
-experimenting with stuff idk i like graphic design
-
-### Easter Egg
-Try the Konami code: `↑ ↑ ↓ ↓ ← → ← → B A`
+## hystericca
+experimenting with stuff idk i like UI design
 
 ## Tech Stack
 - Pure HTML/CSS
@@ -23,10 +20,7 @@ Try the Konami code: `↑ ↑ ↓ ↓ ← → ← → B A`
 ```
 
 ## Notes
-- All effects are GPU-accelerated where possible
-- Fallbacks for users with JS disabled
-- Monochromatic black/white aesthetic
-- Experimental and artistic approach to web design
+- It looks like corporate slop I'm aware I'll change it when I get good
 
 ---
 
